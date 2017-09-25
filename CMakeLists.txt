@@ -15,32 +15,34 @@
 cmake_minimum_required ( VERSION 2.8.12 )
 
 # project
-project ( itw_netx NONE )
+project ( icedtea_web NONE )
 
-set ( ${PROJECT_NAME}_SRCDIR ${CMAKE_CURRENT_LIST_DIR}/../lookaside_icedtea-web )
-file ( GLOB_RECURSE ${PROJECT_NAME}_JAVASRC ${${PROJECT_NAME}_SRCDIR}/netx/*.java )
+# todo: fixme
+set ( ${PROJECT_NAME}_ITW_JAVA_HOME ${openjdk_TOOLS}/bootjdk8 CACHE INTERNAL "" )
 
-set ( ${PROJECT_NAME}_JAVASRC_STR "" )
-foreach ( _file ${${PROJECT_NAME}_JAVASRC} )
-    set ( ${PROJECT_NAME}_JAVASRC_STR "${${PROJECT_NAME}_JAVASRC_STR} ${_file}\n" )
-endforeach ( )
+add_subdirectory ( ${OJDKBUILD_DIR}/deps/tagsoup ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup )
+add_subdirectory ( ${OJDKBUILD_DIR}/deps/rhino ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino )
+add_subdirectory ( ${CMAKE_CURRENT_LIST_DIR}/resources/itw_netx_cmake ${CMAKE_CURRENT_BINARY_DIR}/itw_netx )
+add_subdirectory ( ${OJDKBUILD_DIR}/contrib/itw-launcher ${CMAKE_CURRENT_BINARY_DIR}/itw_launcher )
 
-configure_file ( 
-        ${CMAKE_CURRENT_LIST_DIR}/resources/netx_sources_list.txt
-        ${CMAKE_CURRENT_BINARY_DIR}/netx_sources_list.txt )
-    
-add_custom_target ( ${PROJECT_NAME} ALL
-        COMMAND javac -g -encoding utf-8 -source 8 -target 8
-                -d ${CMAKE_CURRENT_BINARY_DIR}
-                -sourcepath ${${PROJECT_NAME}_SRCDIR}/netx
-                -classpath "${CMAKE_CURRENT_LIST_DIR}/../deps_rhino/build/js.jar;${CMAKE_CURRENT_LIST_DIR}/../deps_tagsoup/build/tagsoup.jar"
-                @netx_sources_list.txt
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/resources/
-                net/sourceforge/jnlp/resources/
-        COMMAND ${CMAKE_COMMAND} -E copy
-                ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/runtime/pac-funcs.js
-                net/sourceforge/jnlp/runtime/pac-funcs.js
-        COMMAND jar cvf netx.jar javax/* net/* sun/*
+add_custom_target ( ${PROJECT_NAME}
+        COMMAND ${CMAKE_COMMAND} -E remove lib.jar
+        COMMAND ${CMAKE_COMMAND} -E remove_directory lib
+        COMMAND ${CMAKE_COMMAND} -E make_directory lib
+        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino/js.jar
+        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup/tagsoup.jar
+        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_netx/netx.jar
+        COMMAND ${${PROJECT_NAME}_ITW_JAVA_HOME}/bin/jar -cvf lib.jar -C lib .
+        COMMAND ${CMAKE_COMMAND} -E remove_directory dist
+        COMMAND ${CMAKE_COMMAND} -E make_directory dist
+        COMMAND ${CMAKE_COMMAND} -E copy lib.jar dist
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/javaws.exe dist
+        COMMAND ${CMAKE_COMMAND} -E copy ${OJDKBUILD_DIR}/lookaside/icedtea-web/netx/javaws_splash.png dist
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Building netx jar ..." )    
+        COMMENT "Creating ${PROJECT_NAME} distribution, path: [${CMAKE_CURRENT_BINARY_DIR}/dist] ..." )
+add_dependencies ( itw_netx itw_tagsoup itw_rhino )
+add_dependencies ( ${PROJECT_NAME} itw_netx javaws  )
+
+# installer
+#configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/installer.xsl
+#        ${CMAKE_CURRENT_BINARY_DIR}/installer.xsl )
