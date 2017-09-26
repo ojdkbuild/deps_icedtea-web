@@ -17,8 +17,10 @@ cmake_minimum_required ( VERSION 2.8.12 )
 # project
 project ( icedtea_web NONE )
 
-# todo: fixme
-set ( ${PROJECT_NAME}_ITW_JAVA_HOME ${openjdk_TOOLS}/bootjdk8 CACHE INTERNAL "" )
+set ( ${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL "1" CACHE STRING "MSI Feature 'Level' for 'icedtea_web' component" )
+set ( ${PROJECT_NAME}_INSTALLER_FEATURE_TITLE "Web Start" CACHE STRING "MSI Feature title for 'icedtea_web' component" )
+#set ( ${PROJECT_NAME}_ITW_JAVA_HOME ${openjdk_TOOLS}/bootjdk8 CACHE STRING "Path to jdk to use for building IcedTea-Web" )
+set ( ${PROJECT_NAME}_ITW_JAVA_HOME ${CMAKE_CURRENT_BINARY_DIR}/../${openjdk_IMAGE} CACHE STRING "Path to jdk to use for building IcedTea-Web" )
 
 add_subdirectory ( ${OJDKBUILD_DIR}/deps/tagsoup ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup )
 add_subdirectory ( ${OJDKBUILD_DIR}/deps/rhino ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino )
@@ -36,13 +38,14 @@ add_custom_target ( ${PROJECT_NAME}
         COMMAND ${CMAKE_COMMAND} -E remove_directory dist
         COMMAND ${CMAKE_COMMAND} -E make_directory dist
         COMMAND ${CMAKE_COMMAND} -E copy lib.jar dist
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/javaws.exe dist
+#        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/javaws.exe dist
         COMMAND ${CMAKE_COMMAND} -E copy ${OJDKBUILD_DIR}/lookaside/icedtea-web/netx/javaws_splash.png dist
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating ${PROJECT_NAME} distribution, path: [${CMAKE_CURRENT_BINARY_DIR}/dist] ..." )
 add_dependencies ( itw_netx itw_tagsoup itw_rhino )
-add_dependencies ( ${PROJECT_NAME} itw_netx javaws  )
+#add_dependencies ( ${PROJECT_NAME} itw_netx javaws  )
+add_dependencies ( ${PROJECT_NAME} itw_netx  )
 
 # installer
-#configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/installer.xsl
-#        ${CMAKE_CURRENT_BINARY_DIR}/installer.xsl )
+configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/installer.xsl
+        ${CMAKE_CURRENT_BINARY_DIR}/installer.xsl )
