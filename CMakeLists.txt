@@ -28,22 +28,22 @@ add_subdirectory ( ${CMAKE_CURRENT_LIST_DIR}/resources/itw_netx_cmake ${CMAKE_CU
 add_subdirectory ( ${OJDKBUILD_DIR}/contrib/itw-launcher ${CMAKE_CURRENT_BINARY_DIR}/itw_launcher )
 
 add_custom_target ( ${PROJECT_NAME}
-        COMMAND ${CMAKE_COMMAND} -E remove lib.jar
+        COMMAND ${CMAKE_COMMAND} -E remove javaws.jar
         COMMAND ${CMAKE_COMMAND} -E remove_directory lib
         COMMAND ${CMAKE_COMMAND} -E make_directory lib
         COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino/js.jar
         COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup/tagsoup.jar
         COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_netx/netx.jar
-        COMMAND ${${PROJECT_NAME}_ITW_JAVA_HOME}/bin/jar -cvf lib.jar -C lib .
+        COMMAND ${${PROJECT_NAME}_ITW_JAVA_HOME}/bin/jar -cvf javaws.jar -C lib .
         COMMAND ${CMAKE_COMMAND} -E remove_directory dist
         COMMAND ${CMAKE_COMMAND} -E make_directory dist
-        COMMAND ${CMAKE_COMMAND} -E copy lib.jar dist
+        COMMAND ${CMAKE_COMMAND} -E copy javaws.jar dist
         COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/javaws.exe dist
         COMMAND ${CMAKE_COMMAND} -E copy ${OJDKBUILD_DIR}/lookaside/icedtea-web/netx/javaws_splash.png dist
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating ${PROJECT_NAME} distribution, path: [${CMAKE_CURRENT_BINARY_DIR}/dist] ..." )
-add_dependencies ( itw_netx itw_tagsoup itw_rhino )
-add_dependencies ( ${PROJECT_NAME} itw_netx javaws  )
+add_dependencies ( itw_netx image itw_tagsoup itw_rhino )
+add_dependencies ( ${PROJECT_NAME} itw_netx javaws )
 
 # installer
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/installer.xsl

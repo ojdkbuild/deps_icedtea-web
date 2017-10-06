@@ -25,13 +25,13 @@
             <xsl:apply-templates select="@* | *"/>
             <Directory Id="WEBSTARTDIR" Name="webstart">
                 <Component Id="_96a91f97_d5d0_405e_800c_dc118bc77bff" Guid="553f6ce7-1c85-49af-af34-1fbf0de7c3f8" Win64="yes">
-                    <File Id="_6173755a_5dc5_4410_93c1_cd8baa6c22f4" Name="lib.jar" KeyPath="yes" DiskId="1"
-                            Source="${CMAKE_CURRENT_BINARY_DIR}/dist/lib.jar"/>
+                    <File Id="_6173755a_5dc5_4410_93c1_cd8baa6c22f4" Name="javaws.jar" KeyPath="yes" DiskId="1"
+                            Source="${CMAKE_CURRENT_BINARY_DIR}/dist/javaws.jar"/>
                 </Component>
-                <!--Component Id="_ab22ec7d_edaf_4313_bbbc_4ff150cd9413" Guid="8b04c2a7-4474-4c81-a8c2-6ad6e92d1269" Win64="yes">
+                <Component Id="_ab22ec7d_edaf_4313_bbbc_4ff150cd9413" Guid="8b04c2a7-4474-4c81-a8c2-6ad6e92d1269" Win64="yes">
                     <File Id="_7f87a404_1d94_4388_a7da_70bb1e7d3fe8" Name="javaws.exe" KeyPath="yes" DiskId="1"
                             Source="${CMAKE_CURRENT_BINARY_DIR}/dist/javaws.exe"/>
-                </Component-->
+                </Component>
                 <Component Id="_3e4cc2d4_9411_494f_8ef0_1b939ff1e65b" Guid="f5b85994-0e3b-4689-8ac1-0e614c8b574e" Win64="yes">
                     <File Id="_0851625f_6163_4968_a2cd_584cd8eea721" Name="javaws_splash.png" KeyPath="yes" DiskId="1"
                             Source="${CMAKE_CURRENT_BINARY_DIR}/dist/javaws_splash.png"/>
@@ -81,11 +81,11 @@
         <Feature>
             <xsl:apply-templates select="@* | *"/>
         </Feature>
-        <Feature Id="icedtea_web" ConfigurableDirectory="WEBSTARTDIR" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}" 
+        <Feature Id="icedtea_web" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}" 
                 Title="${${PROJECT_NAME}_INSTALLER_FEATURE_TITLE}"
                 Description="Web Start implementation based on IcedTea-Web open-source project.">
             <ComponentRef Id="_96a91f97_d5d0_405e_800c_dc118bc77bff"/>
-            <!--ComponentRef Id="_ab22ec7d_edaf_4313_bbbc_4ff150cd9413"/-->
+            <ComponentRef Id="_ab22ec7d_edaf_4313_bbbc_4ff150cd9413"/>
             <ComponentRef Id="_3e4cc2d4_9411_494f_8ef0_1b939ff1e65b"/>
 
             <ComponentRef Id="_af5fdb61_c8cc_4f63_8a3a_82d618335fdf"/>
