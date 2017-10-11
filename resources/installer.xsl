@@ -81,7 +81,7 @@
         <Feature>
             <xsl:apply-templates select="@* | *"/>
         </Feature>
-        <Feature Id="icedtea_web" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}" 
+        <Feature Id="webstart" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}" 
                 Title="${${PROJECT_NAME}_INSTALLER_FEATURE_TITLE}"
                 Description="Web Start implementation based on IcedTea-Web open-source project.">
             <ComponentRef Id="_96a91f97_d5d0_405e_800c_dc118bc77bff"/>
@@ -96,5 +96,17 @@
             <ComponentRef Id="_a19d7897_1e2a_4619_bc04_a51ec8cec3c4"/>
             <ComponentRef Id="_4f1b15f8_e1f9_4847_b0fe_659c42c53e8a"/>
         </Feature>
+
+        <!-- impersonated -->
+        <!-- property already added by update_notifier -->
+        <!--Property Id="WixQuietExec64CmdLine" Value=" "/-->
+        <CustomAction Id="itw_cleanup_impersonated_prop" Property="WixQuietExec64CmdLine" Value="&quot;[WEBSTARTDIR]javaws.exe&quot; -d"/>
+        <CustomAction Id="itw_cleanup_impersonated" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="ignore"/>
+
+        <InstallExecuteSequence>
+            <!-- impersonated -->
+            <Custom Action="itw_cleanup_impersonated_prop" Before="itw_cleanup_impersonated"><![CDATA[!webstart=3 AND REMOVE]]></Custom>
+            <Custom Action="itw_cleanup_impersonated" Before="RemoveFiles"><![CDATA[!webstart=3 AND REMOVE]]></Custom>
+        </InstallExecuteSequence>
     </xsl:template>
 </xsl:stylesheet>
