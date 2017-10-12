@@ -35,12 +35,8 @@ add_custom_command ( OUTPUT netx.jar
                 -sourcepath ${${PROJECT_NAME}_SRCDIR}/netx
                 -classpath "${CMAKE_CURRENT_BINARY_DIR}/../itw_rhino/js.jar;${CMAKE_CURRENT_BINARY_DIR}/../itw_tagsoup/tagsoup.jar"
                 @netx_sources_list.txt
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/resources/
-                net/sourceforge/jnlp/resources/
-        COMMAND ${CMAKE_COMMAND} -E copy
-                ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/runtime/pac-funcs.js
-                net/sourceforge/jnlp/runtime/pac-funcs.js
+        COMMAND (robocopy ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/resources/ net/sourceforge/jnlp/resources/ /e ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+        COMMAND (robocopy ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/runtime/ net/sourceforge/jnlp/runtime/ pac-funcs.js ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND ${icedtea_web_ITW_JAVA_HOME}/bin/jar cvf netx.jar javax/* net/* sun/*
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Building netx jar ..." )    

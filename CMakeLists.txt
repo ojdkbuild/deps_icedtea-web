@@ -28,18 +28,18 @@ add_subdirectory ( ${CMAKE_CURRENT_LIST_DIR}/resources/itw_netx_cmake ${CMAKE_CU
 add_subdirectory ( ${OJDKBUILD_DIR}/contrib/itw-launcher ${CMAKE_CURRENT_BINARY_DIR}/itw_launcher )
 
 add_custom_target ( ${PROJECT_NAME}
-        COMMAND ${CMAKE_COMMAND} -E remove javaws.jar
-        COMMAND ${CMAKE_COMMAND} -E remove_directory lib
-        COMMAND ${CMAKE_COMMAND} -E make_directory lib
+        COMMAND if exist javaws.jar del javaws.jar
+        COMMAND if exist lib rd /s /q lib
+        COMMAND mkdir lib
         COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino/js.jar
         COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup/tagsoup.jar
         COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_netx/netx.jar
         COMMAND ${${PROJECT_NAME}_ITW_JAVA_HOME}/bin/jar -cvf javaws.jar -C lib .
-        COMMAND ${CMAKE_COMMAND} -E remove_directory dist
-        COMMAND ${CMAKE_COMMAND} -E make_directory dist
-        COMMAND ${CMAKE_COMMAND} -E copy javaws.jar dist
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/javaws.exe dist
-        COMMAND ${CMAKE_COMMAND} -E copy ${OJDKBUILD_DIR}/lookaside/icedtea-web/netx/javaws_splash.png dist
+        COMMAND if exist dist rd /s /q dist
+        COMMAND mkdir dist
+        COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR} dist/ javaws.jar ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+        COMMAND (robocopy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ dist/ javaws.exe ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+        COMMAND (robocopy ${OJDKBUILD_DIR}/lookaside/icedtea-web/netx/ dist/ javaws_splash.png ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating ${PROJECT_NAME} distribution, path: [${CMAKE_CURRENT_BINARY_DIR}/dist] ..." )
 add_dependencies ( itw_netx image itw_tagsoup itw_rhino )
