@@ -37,7 +37,7 @@ add_custom_command ( OUTPUT netx.jar
                 @netx_sources_list.txt
         COMMAND (robocopy ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/resources/ net/sourceforge/jnlp/resources/ /e ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND (robocopy ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/runtime/ net/sourceforge/jnlp/runtime/ pac-funcs.js ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
-        COMMAND ${icedtea_web_ITW_JAVA_HOME}/bin/jar cvf netx.jar javax/* net/* sun/*
+        COMMAND ${icedtea_web_ITW_JAVA_HOME}/bin/jar -cf netx.jar javax/* net/* sun/*
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Building netx jar ..." )    
 add_custom_target ( ${PROJECT_NAME} DEPENDS netx.jar )

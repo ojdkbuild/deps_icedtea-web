@@ -31,10 +31,10 @@ add_custom_target ( ${PROJECT_NAME}
         COMMAND if exist javaws.jar del javaws.jar
         COMMAND if exist lib rd /s /q lib
         COMMAND mkdir lib
-        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino/js.jar
-        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup/tagsoup.jar
-        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_netx/netx.jar
-        COMMAND ${${PROJECT_NAME}_ITW_JAVA_HOME}/bin/jar -cvf javaws.jar -C lib .
+        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino/js.jar
+        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup/tagsoup.jar
+        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_netx/netx.jar
+        COMMAND ${${PROJECT_NAME}_ITW_JAVA_HOME}/bin/jar -cf javaws.jar -C lib .
         COMMAND if exist dist rd /s /q dist
         COMMAND mkdir dist
         COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR} dist/ javaws.jar ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
