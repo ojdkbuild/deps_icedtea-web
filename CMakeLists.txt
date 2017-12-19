@@ -17,7 +17,7 @@ cmake_minimum_required ( VERSION 2.8.12 )
 # project
 project ( icedtea_web NONE )
 
-set ( ${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL "1" CACHE STRING "MSI Feature 'Level' for 'icedtea_web' component" )
+set ( ${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL "2" CACHE STRING "MSI Feature 'Level' for 'icedtea_web' component" )
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_TITLE "Web Start" CACHE STRING "MSI Feature title for 'icedtea_web' component" )
 # set ( ${PROJECT_NAME}_ITW_JAVA_HOME ${openjdk_TOOLS}/bootjdk8 CACHE STRING "Path to jdk to use for building IcedTea-Web" )
 set ( ${PROJECT_NAME}_ITW_JAVA_HOME ${CMAKE_CURRENT_BINARY_DIR}/../${openjdk_IMAGE} CACHE STRING "Path to jdk to use for building IcedTea-Web" )
