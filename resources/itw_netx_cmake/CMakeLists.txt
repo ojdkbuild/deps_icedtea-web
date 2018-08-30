@@ -17,7 +17,9 @@ cmake_minimum_required ( VERSION 2.8.12 )
 # project
 project ( itw_netx NONE )
 set ( ${PROJECT_NAME}_SRCDIR ${OJDKBUILD_DIR}/lookaside/icedtea-web )
-file ( GLOB_RECURSE ${PROJECT_NAME}_JAVASRC ${${PROJECT_NAME}_SRCDIR}/netx/*.java )
+file ( GLOB_RECURSE ${PROJECT_NAME}_JAVASRC_NETX ${${PROJECT_NAME}_SRCDIR}/netx/*.java )
+file ( GLOB_RECURSE ${PROJECT_NAME}_JAVASRC_PLUGIN ${${PROJECT_NAME}_SRCDIR}/plugin/icedteanp/java/*.java )
+set ( ${PROJECT_NAME}_JAVASRC ${${PROJECT_NAME}_JAVASRC_NETX} ${${PROJECT_NAME}_JAVASRC_PLUGIN} )
 
 set ( ${PROJECT_NAME}_JAVASRC_STR "" )
 foreach ( _file ${${PROJECT_NAME}_JAVASRC} )
