@@ -19,8 +19,6 @@ project ( icedtea_web NONE )
 
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL "2" CACHE STRING "MSI Feature 'Level' for 'icedtea_web' component" )
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_TITLE "Web Start" CACHE STRING "MSI Feature title for 'icedtea_web' component" )
-# set ( ${PROJECT_NAME}_ITW_JAVA_HOME ${openjdk_TOOLS}/bootjdk8 CACHE STRING "Path to jdk to use for building IcedTea-Web" )
-set ( ${PROJECT_NAME}_ITW_JAVA_HOME ${CMAKE_CURRENT_BINARY_DIR}/../${openjdk_IMAGE} CACHE STRING "Path to jdk to use for building IcedTea-Web" )
 
 add_subdirectory ( ${OJDKBUILD_DIR}/deps/tagsoup ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup )
 add_subdirectory ( ${OJDKBUILD_DIR}/deps/rhino ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino )
@@ -31,9 +29,9 @@ add_custom_target ( ${PROJECT_NAME}
         COMMAND if exist javaws.jar del javaws.jar
         COMMAND if exist lib rd /s /q lib
         COMMAND mkdir lib
-        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino/js.jar
-        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup/tagsoup.jar
-        COMMAND ${openjdk_TOOLS}/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_netx/netx.jar
+        COMMAND ${OJDKBUILD_DIR}/tools/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino/js.jar
+        COMMAND ${OJDKBUILD_DIR}/tools/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup/tagsoup.jar
+        COMMAND ${OJDKBUILD_DIR}/tools/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_netx/netx.jar
         COMMAND ${${PROJECT_NAME}_ITW_JAVA_HOME}/bin/jar -cf javaws.jar -C lib .
         COMMAND if exist dist rd /s /q dist
         COMMAND mkdir dist
