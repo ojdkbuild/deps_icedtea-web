@@ -38,10 +38,6 @@ add_custom_target ( ${PROJECT_NAME}
         COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR} dist/ javaws.jar ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND (robocopy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ dist/ javaws.exe ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND (robocopy ${OJDKBUILD_DIR}/lookaside/icedtea-web/netx/ dist/ javaws_splash.png ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
-        # sign binaries
-        COMMAND ${${PROJECT_NAME}_ITW_JAVA_HOME}/bin/jjs.exe ${openjdk_SIGNER_JVM_OPTS}
-                ${openjdk_INSTALLER_RESOURCES_PATH}/signer.js
-                ${CMAKE_CURRENT_BINARY_DIR}/dist
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating ${PROJECT_NAME} distribution, path: [${CMAKE_CURRENT_BINARY_DIR}/dist] ..." )
 add_dependencies ( itw_netx image itw_tagsoup itw_rhino )
