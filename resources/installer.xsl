@@ -34,6 +34,10 @@
                     <File Id="webstart_javaws_exe_file" Name="javaws.exe" KeyPath="yes" DiskId="1"
                           Source="${CMAKE_CURRENT_BINARY_DIR}/dist/javaws.exe"/>
                 </Component>
+                <Component Id="webstart_javaws_options" Guid="5dd2346f-3890-4e63-8727-170a183ac297" Win64="${openjdk_INSTALLER_WIN64_WIX}">
+                    <File Id="webstart_javaws_options_file" Name="javaws_options.txt" KeyPath="yes" DiskId="1"
+                          Source="${CMAKE_CURRENT_BINARY_DIR}/dist/javaws_options.txt"/>
+                </Component>
                 <Component Id="webstart_javaws_splash" Guid="f5b85994-0e3b-4689-8ac1-0e614c8b574e" Win64="${openjdk_INSTALLER_WIN64_WIX}">
                     <File Id="webstart_javaws_splash_file" Name="javaws_splash.png" KeyPath="yes" DiskId="1"
                           Source="${CMAKE_CURRENT_BINARY_DIR}/dist/javaws_splash.png"/>
@@ -104,6 +108,7 @@
                 xmlns="http://schemas.microsoft.com/wix/2006/wi">
             <ComponentRef Id="webstart_javaws_jar"/>
             <ComponentRef Id="webstart_javaws_exe"/>
+            <ComponentRef Id="webstart_javaws_options"/>
             <ComponentRef Id="webstart_javaws_splash"/>
 
             <Feature Id="webstart_registry" Absent="allow" AllowAdvertise="no" Level="2"

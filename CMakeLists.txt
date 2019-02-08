@@ -20,6 +20,8 @@ project ( icedtea_web NONE )
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL "2" CACHE STRING "MSI Feature 'Level' for 'icedtea_web' component" )
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_TITLE "Web Start" CACHE STRING "MSI Feature title for 'icedtea_web' component" )
 
+option ( ${PROJECT_NAME}_ENABLE_STANDALONE "Build ITW without building JDK" OFF )
+
 add_subdirectory ( ${OJDKBUILD_DIR}/deps/tagsoup ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup )
 add_subdirectory ( ${OJDKBUILD_DIR}/deps/rhino ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino )
 add_subdirectory ( ${CMAKE_CURRENT_LIST_DIR}/resources/itw_netx_cmake ${CMAKE_CURRENT_BINARY_DIR}/itw_netx )
@@ -37,10 +39,14 @@ add_custom_target ( ${PROJECT_NAME}
         COMMAND mkdir dist
         COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR} dist/ javaws.jar ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND (robocopy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ dist/ javaws.exe ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+        COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR}/itw_launcher/ dist/ javaws_options.txt ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND (robocopy ${OJDKBUILD_DIR}/lookaside/icedtea-web/netx/ dist/ javaws_splash.png ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating ${PROJECT_NAME} distribution, path: [${CMAKE_CURRENT_BINARY_DIR}/dist] ..." )
-add_dependencies ( itw_netx image itw_tagsoup itw_rhino )
+add_dependencies ( itw_netx itw_tagsoup itw_rhino )
+if ( NOT ${PROJECT_NAME}_ENABLE_STANDALONE )
+    add_dependencies ( itw_netx image )
+endif ( )
 add_dependencies ( ${PROJECT_NAME} itw_netx javaws )
 
 # installer
