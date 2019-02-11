@@ -28,19 +28,19 @@
                 <!-- webstart -->
                 <Component Id="webstart_javaws_jar" Guid="553f6ce7-1c85-49af-af34-1fbf0de7c3f8" Win64="${openjdk_INSTALLER_WIN64_WIX}">
                     <File Id="webstart_javaws_jar_file" Name="javaws.jar" KeyPath="yes" DiskId="1"
-                          Source="${CMAKE_CURRENT_BINARY_DIR}/dist/javaws.jar"/>
+                          Source="webstart/javaws.jar"/>
                 </Component>
                 <Component Id="webstart_javaws_exe" Guid="8b04c2a7-4474-4c81-a8c2-6ad6e92d1269" Win64="${openjdk_INSTALLER_WIN64_WIX}">
                     <File Id="webstart_javaws_exe_file" Name="javaws.exe" KeyPath="yes" DiskId="1"
-                          Source="${CMAKE_CURRENT_BINARY_DIR}/dist/javaws.exe"/>
+                          Source="webstart/javaws.exe"/>
                 </Component>
                 <Component Id="webstart_javaws_options" Guid="5dd2346f-3890-4e63-8727-170a183ac297" Win64="${openjdk_INSTALLER_WIN64_WIX}">
                     <File Id="webstart_javaws_options_file" Name="javaws_options.txt" KeyPath="yes" DiskId="1"
-                          Source="${CMAKE_CURRENT_BINARY_DIR}/dist/javaws_options.txt"/>
+                          Source="webstart/javaws_options.txt"/>
                 </Component>
                 <Component Id="webstart_javaws_splash" Guid="f5b85994-0e3b-4689-8ac1-0e614c8b574e" Win64="${openjdk_INSTALLER_WIN64_WIX}">
                     <File Id="webstart_javaws_splash_file" Name="javaws_splash.png" KeyPath="yes" DiskId="1"
-                          Source="${CMAKE_CURRENT_BINARY_DIR}/dist/javaws_splash.png"/>
+                          Source="webstart/javaws_splash.png"/>
                 </Component>
 
             </Directory>
@@ -111,7 +111,7 @@
             <ComponentRef Id="webstart_javaws_options"/>
             <ComponentRef Id="webstart_javaws_splash"/>
 
-            <Feature Id="webstart_registry" Absent="allow" AllowAdvertise="no" Level="2"
+            <Feature Id="webstart_registry" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}"
                      Title="JNLP Files Association"
                      Description="Allows to run JNLP files and 'jnlp://' URLs from web browsers and Windows Explorer."
                      xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -125,24 +125,43 @@
                 <ComponentRef Id="webstart_registry_jnlp_file_cmd"/>
             </Feature>
 
-            <Feature Id="webstart_env" Absent="allow" AllowAdvertise="no" Level="2"
+            <Feature Id="webstart_env" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}"
                      Title="PATH Variable"
                      Description="Appends '&lt;jdk&gt;/webstart' to the 'PATH' system environment variable."
+                     xmlns="http://schemas.microsoft.com/wix/2006/wi">
+                <ComponentRef Id="webstart_env_path_comp"/>
+            </Feature>
+
+            <Feature Id="webstart_migrate" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}"
+                     Title="Keep settings and cache"
+                     Description="Keeps WebStart settings and cache files intact on update."
                      xmlns="http://schemas.microsoft.com/wix/2006/wi">
                 <ComponentRef Id="webstart_env_path_comp"/>
             </Feature>
         </Feature>
 
         <!-- impersonated -->
-        <!-- property already added by update_notifier -->
-        <!--Property Id="WixQuietExec${openjdk_INSTALLER_WIN64_EXEC_WIX}CmdLine" Value=" "/-->
+        <!-- property may be already added by update_notifier -->
+        <Property Id="WixQuietExec${openjdk_INSTALLER_WIN64_EXEC_WIX}CmdLine" Value=" " xmlns="http://schemas.microsoft.com/wix/2006/wi"/>
         <CustomAction Id="itw_cleanup_impersonated_prop" Property="WixQuietExec${openjdk_INSTALLER_WIN64_EXEC_WIX}CmdLine" Value="&quot;[WEBSTARTDIR]javaws.exe&quot; -d" xmlns="http://schemas.microsoft.com/wix/2006/wi"/>
         <CustomAction Id="itw_cleanup_impersonated" BinaryKey="WixCA" DllEntry="WixQuietExec${openjdk_INSTALLER_WIN64_EXEC_WIX}" Return="ignore" xmlns="http://schemas.microsoft.com/wix/2006/wi"/>
 
+        <!-- immediate -->
+        <CustomAction Id="itw_migrate_immediate" Property="itw_migrate_deferred" Value="&quot;[WEBSTARTDIR]javaws.exe&quot; -m" xmlns="http://schemas.microsoft.com/wix/2006/wi"/>
+
+        <!-- deferred -->
+        <CustomAction Id="itw_migrate_deferred" BinaryKey="WixCA" DllEntry="WixQuietExec${openjdk_INSTALLER_WIN64_EXEC_WIX}" Return="ignore" Execute="deferred" Impersonate="no" xmlns="http://schemas.microsoft.com/wix/2006/wi"/>
+
         <InstallExecuteSequence xmlns="http://schemas.microsoft.com/wix/2006/wi">
             <!-- impersonated -->
-            <Custom Action="itw_cleanup_impersonated_prop" Before="itw_cleanup_impersonated"><![CDATA[!webstart=3 AND REMOVE]]></Custom>
-            <Custom Action="itw_cleanup_impersonated" Before="RemoveFiles"><![CDATA[!webstart=3 AND REMOVE]]></Custom>
+            <Custom Action="itw_cleanup_impersonated_prop" Before="itw_cleanup_impersonated"><![CDATA[!webstart=3 AND REMOVE AND (NOT (!webstart_migrate=3 AND UPGRADINGPRODUCTCODE))]]></Custom>
+            <Custom Action="itw_cleanup_impersonated" Before="RemoveFiles"><![CDATA[!webstart=3 AND REMOVE AND (NOT (!webstart_migrate=3 AND UPGRADINGPRODUCTCODE))]]></Custom>
+
+            <!-- immediate -->
+            <Custom Action="itw_migrate_immediate" Before="InstallInitialize"><![CDATA[&webstart_migrate=3 AND NOT !webstart_migrate=3]]></Custom>
+
+            <!-- deferred -->
+            <Custom Action="itw_migrate_deferred" Before="InstallFinalize"><![CDATA[&webstart_migrate=3 AND NOT !webstart_migrate=3]]></Custom>
         </InstallExecuteSequence>
     </xsl:template>
 </xsl:stylesheet>

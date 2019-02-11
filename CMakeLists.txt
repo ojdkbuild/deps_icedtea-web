@@ -17,7 +17,7 @@ cmake_minimum_required ( VERSION 2.8.12 )
 # project
 project ( icedtea_web NONE )
 
-set ( ${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL "2" CACHE STRING "MSI Feature 'Level' for 'icedtea_web' component" )
+set ( ${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL "1" CACHE STRING "MSI Feature 'Level' for 'icedtea_web' component" )
 set ( ${PROJECT_NAME}_INSTALLER_FEATURE_TITLE "Web Start" CACHE STRING "MSI Feature title for 'icedtea_web' component" )
 
 option ( ${PROJECT_NAME}_ENABLE_STANDALONE "Build ITW without building JDK" OFF )
