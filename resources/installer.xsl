@@ -141,8 +141,6 @@
         </Feature>
 
         <!-- impersonated -->
-        <!-- property may be already added by update_notifier -->
-        <Property Id="WixQuietExec${openjdk_INSTALLER_WIN64_EXEC_WIX}CmdLine" Value=" " xmlns="http://schemas.microsoft.com/wix/2006/wi"/>
         <CustomAction Id="itw_cleanup_impersonated_prop" Property="WixQuietExec${openjdk_INSTALLER_WIN64_EXEC_WIX}CmdLine" Value="&quot;[WEBSTARTDIR]javaws.exe&quot; -d" xmlns="http://schemas.microsoft.com/wix/2006/wi"/>
         <CustomAction Id="itw_cleanup_impersonated" BinaryKey="WixCA" DllEntry="WixQuietExec${openjdk_INSTALLER_WIN64_EXEC_WIX}" Return="ignore" xmlns="http://schemas.microsoft.com/wix/2006/wi"/>
 
