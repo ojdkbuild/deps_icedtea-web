@@ -133,7 +133,7 @@
             </Feature>
 
             <Feature Id="webstart_migrate" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}"
-                     Title="Keep settings and cache"
+                     Title="Keep Settings and Cache"
                      Description="Keeps WebStart settings and cache files intact on update."
                      xmlns="http://schemas.microsoft.com/wix/2006/wi">
                 <ComponentRef Id="webstart_env_path_comp"/>
