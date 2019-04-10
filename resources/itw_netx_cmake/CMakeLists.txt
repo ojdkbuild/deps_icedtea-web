@@ -30,16 +30,22 @@ configure_file (
         ${CMAKE_CURRENT_LIST_DIR}/../netx_sources_list.txt
         ${CMAKE_CURRENT_BINARY_DIR}/netx_sources_list.txt )
 
-# todo: icon
+add_custom_target ( ${PROJECT_NAME}_build_jdk )
+if ( NOT icedtea_web_ENABLE_STANDALONE )
+    add_dependencies ( ${PROJECT_NAME}_build_jdk image )
+endif ( )
+
 add_custom_command ( OUTPUT netx.jar
         COMMAND ${icedtea_web_ITW_JAVA_HOME}/bin/javac -g -encoding utf-8 -source 8 -target 8
                 -d ${CMAKE_CURRENT_BINARY_DIR}
                 -sourcepath ${${PROJECT_NAME}_SRCDIR}/netx
-                -classpath "${CMAKE_CURRENT_BINARY_DIR}/../itw_rhino/js.jar;${CMAKE_CURRENT_BINARY_DIR}/../itw_tagsoup/tagsoup.jar"
+                -classpath "${CMAKE_CURRENT_BINARY_DIR}/../itw_rhino/js.jar;${CMAKE_CURRENT_BINARY_DIR}/../itw_tagsoup/tagsoup.jar;${CMAKE_CURRENT_BINARY_DIR}/../itw_mslinks/mslinks.jar"
                 @netx_sources_list.txt
-        COMMAND (robocopy ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/resources/ net/sourceforge/jnlp/resources/ /e ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
-        COMMAND (robocopy ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/runtime/ net/sourceforge/jnlp/runtime/ pac-funcs.js ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+        COMMAND (robocopy ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/resources/ net/sourceforge/jnlp/resources/ /e /nfl ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+        COMMAND (robocopy ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/runtime/ net/sourceforge/jnlp/runtime/ pac-funcs.js /nfl ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND ${icedtea_web_ITW_JAVA_HOME}/bin/jar -cf netx.jar javax/* net/* sun/*
+        DEPENDS ${PROJECT_NAME}_build_jdk itw_tagsoup itw_rhino itw_mslinks
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Building netx jar ..." )    
+        COMMENT "Building netx jar ..." )
+
 add_custom_target ( ${PROJECT_NAME} DEPENDS netx.jar )

@@ -24,6 +24,7 @@ option ( ${PROJECT_NAME}_ENABLE_STANDALONE "Build ITW without building JDK" OFF 
 
 add_subdirectory ( ${OJDKBUILD_DIR}/deps/tagsoup ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup )
 add_subdirectory ( ${OJDKBUILD_DIR}/deps/rhino ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino )
+add_subdirectory ( ${OJDKBUILD_DIR}/deps/mslinks ${CMAKE_CURRENT_BINARY_DIR}/itw_mslinks )
 add_subdirectory ( ${CMAKE_CURRENT_LIST_DIR}/resources/itw_netx_cmake ${CMAKE_CURRENT_BINARY_DIR}/itw_netx )
 add_subdirectory ( ${OJDKBUILD_DIR}/contrib/itw-launcher ${CMAKE_CURRENT_BINARY_DIR}/itw_launcher )
 
@@ -33,6 +34,7 @@ add_custom_target ( ${PROJECT_NAME}
         COMMAND mkdir lib
         COMMAND ${OJDKBUILD_DIR}/tools/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_rhino/js.jar
         COMMAND ${OJDKBUILD_DIR}/tools/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_tagsoup/tagsoup.jar
+        COMMAND ${OJDKBUILD_DIR}/tools/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_mslinks/mslinks.jar
         COMMAND ${OJDKBUILD_DIR}/tools/zip/unzip.exe -q -o -d lib ${CMAKE_CURRENT_BINARY_DIR}/itw_netx/netx.jar
         COMMAND ${${PROJECT_NAME}_ITW_JAVA_HOME}/bin/jar -cf javaws.jar -C lib .
         COMMAND if exist dist rd /s /q dist
@@ -41,13 +43,9 @@ add_custom_target ( ${PROJECT_NAME}
         COMMAND (robocopy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ dist/ javaws.exe ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR}/itw_launcher/ dist/ javaws_options.txt ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND (robocopy ${OJDKBUILD_DIR}/lookaside/icedtea-web/netx/ dist/ javaws_splash.png ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+        DEPENDS itw_netx javaws
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating ${PROJECT_NAME} distribution, path: [${CMAKE_CURRENT_BINARY_DIR}/dist] ..." )
-add_dependencies ( itw_netx itw_tagsoup itw_rhino )
-if ( NOT ${PROJECT_NAME}_ENABLE_STANDALONE )
-    add_dependencies ( itw_netx image )
-endif ( )
-add_dependencies ( ${PROJECT_NAME} itw_netx javaws )
 
 # installer
 configure_file ( ${CMAKE_CURRENT_LIST_DIR}/resources/installer.xsl
