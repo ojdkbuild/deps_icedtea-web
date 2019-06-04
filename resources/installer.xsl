@@ -111,7 +111,7 @@
             <ComponentRef Id="webstart_javaws_options"/>
             <ComponentRef Id="webstart_javaws_splash"/>
 
-            <Feature Id="webstart_registry" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}"
+            <Feature Id="webstart_registry" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL_REGISTRY}"
                      Title="JNLP Files Association"
                      Description="Allows to run JNLP files and 'jnlp://' URLs from web browsers and Windows Explorer."
                      xmlns="http://schemas.microsoft.com/wix/2006/wi">
@@ -125,14 +125,14 @@
                 <ComponentRef Id="webstart_registry_jnlp_file_cmd"/>
             </Feature>
 
-            <Feature Id="webstart_env" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}"
+            <Feature Id="webstart_env" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL_ENV}"
                      Title="PATH Variable"
                      Description="Appends '&lt;jdk&gt;/webstart' to the 'PATH' system environment variable."
                      xmlns="http://schemas.microsoft.com/wix/2006/wi">
                 <ComponentRef Id="webstart_env_path_comp"/>
             </Feature>
 
-            <Feature Id="webstart_migrate" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL}"
+            <Feature Id="webstart_migrate" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL_MIGRATE}"
                      Title="Keep Settings and Cache"
                      Description="Keeps WebStart settings and cache files intact on update."
                      xmlns="http://schemas.microsoft.com/wix/2006/wi">
