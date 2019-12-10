@@ -26,9 +26,17 @@ foreach ( _file ${${PROJECT_NAME}_JAVASRC} )
     set ( ${PROJECT_NAME}_JAVASRC_STR "${${PROJECT_NAME}_JAVASRC_STR} ${_file}\n" )
 endforeach ( )
 
+set ( ${PROJECT_NAME}_JAVASRC_PLUGIN_STR "" )
+foreach ( _file ${${PROJECT_NAME}_JAVASRC_PLUGIN} )
+    set ( ${PROJECT_NAME}_JAVASRC_PLUGIN_STR "${${PROJECT_NAME}_JAVASRC_PLUGIN_STR} ${_file}\n" )
+endforeach ( )
+
 configure_file ( 
         ${CMAKE_CURRENT_LIST_DIR}/../netx_sources_list.txt
         ${CMAKE_CURRENT_BINARY_DIR}/netx_sources_list.txt )
+configure_file (
+        ${CMAKE_CURRENT_LIST_DIR}/../plugin_sources_list.txt
+        ${CMAKE_CURRENT_BINARY_DIR}/plugin_sources_list.txt )
 
 add_custom_target ( ${PROJECT_NAME}_build_jdk )
 if ( NOT icedtea_web_ENABLE_STANDALONE )
@@ -43,9 +51,19 @@ add_custom_command ( OUTPUT netx.jar
                 @netx_sources_list.txt
         COMMAND (robocopy ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/resources/ net/sourceforge/jnlp/resources/ /e /nfl ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND (robocopy ${${PROJECT_NAME}_SRCDIR}/netx/net/sourceforge/jnlp/runtime/ net/sourceforge/jnlp/runtime/ pac-funcs.js /nfl ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
-        COMMAND ${icedtea_web_ITW_JAVA_HOME}/bin/jar -cf netx.jar javax/* net/* sun/*
+        COMMAND ${icedtea_web_ITW_JAVA_HOME}/bin/jar -cf netx.jar javax/* net/* netscape/* sun/*
         DEPENDS ${PROJECT_NAME}_build_jdk itw_tagsoup itw_rhino itw_mslinks
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Building netx jar ..." )
+        COMMENT "Building plugin.jar ..." )
 
-add_custom_target ( ${PROJECT_NAME} DEPENDS netx.jar )
+add_custom_command ( OUTPUT plugin.jar
+        COMMAND ${icedtea_web_ITW_JAVA_HOME}/bin/javac -g -encoding utf-8 -source 8 -target 8
+                -d ${CMAKE_CURRENT_BINARY_DIR}
+                -sourcepath ${${PROJECT_NAME}_SRCDIR}/plugin/icedteanp/java
+                @plugin_sources_list.txt
+        COMMAND ${icedtea_web_ITW_JAVA_HOME}/bin/jar -cf plugin.jar netscape/* sun/*
+        DEPENDS ${PROJECT_NAME}_build_jdk
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Building plugin.jar ..." )
+
+add_custom_target ( ${PROJECT_NAME} DEPENDS netx.jar plugin.jar )

@@ -46,6 +46,9 @@ add_custom_target ( ${PROJECT_NAME}
         COMMAND (robocopy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ dist/ javaws.exe ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR}/itw_launcher/ dist/ javaws_options.txt ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         COMMAND (robocopy ${OJDKBUILD_DIR}/lookaside/icedtea-web/netx/ dist/ javaws_splash.png ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
+        COMMAND if exist dist_plugin rd /s /q dist_plugin
+        COMMAND mkdir dist_plugin
+        COMMAND (robocopy ${CMAKE_CURRENT_BINARY_DIR}/itw_netx dist_plugin/ plugin.jar ${openjdk_RBCFLAGS} ) ${openjdk_RBCPOSTFIX}
         DEPENDS itw_netx javaws
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating ${PROJECT_NAME} distribution, path: [${CMAKE_CURRENT_BINARY_DIR}/dist] ..." )

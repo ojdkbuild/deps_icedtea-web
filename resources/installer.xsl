@@ -44,6 +44,17 @@
                 </Component>
 
             </Directory>
+
+            <!-- plugin.jar -->
+            <Directory Id="webstart_plugin_jre_dir" Name="jre">
+                <Directory Id="webstart_plugin_jre_lib_dir" Name="lib">
+                    <Component Id="webstart_plugin_jar" Guid="c5d0d007-fd02-4f93-a790-3962d0002de6" Win64="${openjdk_INSTALLER_WIN64_WIX}">
+                        <File Id="webstart_plugin_jar_file" Name="plugin.jar" KeyPath="yes" DiskId="1"
+                              Source="webstart/plugin.jar"/>
+                    </Component>
+                </Directory>
+            </Directory>
+
         </Directory>
 
         <!-- webstart_registry -->
@@ -137,6 +148,13 @@
                      Description="Keeps WebStart settings and cache files intact on update."
                      xmlns="http://schemas.microsoft.com/wix/2006/wi">
                 <ComponentRef Id="webstart_env_path_comp"/>
+            </Feature>
+
+            <Feature Id="webstart_plugin" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL_MIGRATE}"
+                     Title="Install plugin.jar file"
+                     Description="Installs plugin.jar file into '&lt;jdk&gt;/jre/lib/' for compatibility with third-party applications. Web-browser plugin implementation is NOT included."
+                     xmlns="http://schemas.microsoft.com/wix/2006/wi">
+                <ComponentRef Id="webstart_plugin_jar"/>
             </Feature>
         </Feature>
 
