@@ -147,7 +147,6 @@
                      Title="Keep Settings and Cache"
                      Description="Keeps WebStart settings and cache files intact on update."
                      xmlns="http://schemas.microsoft.com/wix/2006/wi">
-                <ComponentRef Id="webstart_env_path_comp"/>
             </Feature>
 
             <Feature Id="webstart_plugin" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL_MIGRATE}"
