@@ -150,7 +150,7 @@
             </Feature>
 
             <Feature Id="webstart_plugin" Absent="allow" AllowAdvertise="no" Level="${${PROJECT_NAME}_INSTALLER_FEATURE_LEVEL_MIGRATE}"
-                     Title="Install plugin.jar file"
+                     Title="Install plugin.jar"
                      Description="Installs plugin.jar file into '&lt;jdk&gt;/jre/lib/' for compatibility with third-party applications. Web-browser plugin implementation is NOT included."
                      xmlns="http://schemas.microsoft.com/wix/2006/wi">
                 <ComponentRef Id="webstart_plugin_jar"/>
